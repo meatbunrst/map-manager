@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.SysMenuItemDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SysMenuItemEntity">
+        <result column="id" property="id" />
+        <result column="NAME" property="name" />
+        <result column="MENU_SORT" property="menuSort" />
+        <result column="SYS_ID" property="sysId" />
+        <result column="PERMISSION" property="permission" />
+        <result column="MENU_TYPE" property="menuType" />
+        <result column="MEENU_HREF" property="meenuHref" />
+        <result column="REMARKS" property="remarks" />
+        <result column="CREATE_time" property="createTime" />
+        <result column="UPDATE_TIME" property="updateTime" />
+    </resultMap>
+
+
+    <delete id="deleteByModel">
+        delete from SYS_MENU_ITEM t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from SYS_MENU_ITEM t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from SYS_MENU_ITEM t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from SYS_MENU_ITEM t
+        <where>
+            <include refid="select_content"/>
+            <if test="ew.sqlSegment != null and ew.sqlSegment != ''and !ew.sqlSegment.startsWith(' ORDER')  ">
+                and  ${ew.sqlSegment}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from SYS_MENU_ITEM t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.id != null and e.id != '' ">
+            AND t.ID = #{e.id}
+        </if>
+        <if test="e.name != null and e.name != '' ">
+            AND t.NAME = #{e.name}
+        </if>
+        <if test="e.menuSort != null and e.menuSort != '' ">
+            AND t.MENU_SORT = #{e.menuSort}
+        </if>
+        <if test="e.sysId != null and e.sysId != '' ">
+            AND t.SYS_ID = #{e.sysId}
+        </if>
+        <if test="e.permission != null and e.permission != '' ">
+            AND t.PERMISSION = #{e.permission}
+        </if>
+        <if test="e.menuType != null and e.menuType != '' ">
+            AND t.MENU_TYPE = #{e.menuType}
+        </if>
+        <if test="e.meenuHref != null and e.meenuHref != '' ">
+            AND t.MEENU_HREF = #{e.meenuHref}
+        </if>
+        <if test="e.remarks != null and e.remarks != '' ">
+            AND t.REMARKS = #{e.remarks}
+        </if>
+        <if test="e.createTime != null and e.createTime != '' ">
+            AND t.CREATE_TIME = #{e.createTime}
+        </if>
+        <if test="e.updateTime != null and e.updateTime != '' ">
+            AND t.UPDATE_TIME = #{e.updateTime}
+        </if>
+    </sql>
+
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.debug.dao.DebugDetailedDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.debug.entity.DebugDetailedEntity">
+        <result column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="module_id" property="moduleId" />
+        <result column="project_id" property="projectId" />
+        <result column="user_id" property="userId" />
+        <result column="version_id" property="versionId" />
+        <result column="type" property="type" />
+        <result column="priority" property="priority" />
+        <result column="level" property="level" />
+        <result column="key_work" property="keyWork" />
+        <result column="end_date" property="endDate" />
+        <result column="content" property="content" />
+        <result column="file_ids" property="fileIds" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+
+        <result column="projectName" property="projectName" />
+        <result column="userName" property="userName" />
+        <result column="moduleName" property="moduleName" />
+
+        <result column="solve_person" property="solvePerson" />
+        <result column="solve_time" property="solveTime" />
+        <result column="feedback" property="feedback" />
+
+    </resultMap>
+
+    <delete id="deleteByModel">
+        delete t from DEBUG_DETAILED t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from DEBUG_DETAILED t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select t.*,u.ACCOUNT_NAME as userName ,d.name as projectName ,m.FULLNAME as moduleName from DEBUG_DETAILED t
+        inner join sys_user u  on t.user_id = u.USER_ID
+        inner join debug_project d on t.project_id = d.id
+        inner join DEBUG_MODULE m on m.id = t.module_id
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from DEBUG_DETAILED t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select t.*,u.ACCOUNT_NAME as userName ,d.name as projectName ,m.FULLNAME as moduleName from DEBUG_DETAILED t
+        inner join sys_user u  on t.user_id = u.USER_ID
+        inner join debug_project d on t.project_id = d.id
+        inner join DEBUG_MODULE m on m.id = t.module_id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.id != null and e.id != '' ">
+            AND t.ID = #{e.id}
+        </if>
+        <if test="e.title != null and e.title != '' ">
+            AND t.TITLE = #{e.title}
+        </if>
+        <if test="e.moduleId != null and e.moduleId != '' ">
+            AND t.MODULE_ID = #{e.moduleId}
+        </if>
+        <if test="e.projectId != null and e.projectId != '' ">
+            AND t.PROJECT_ID = #{e.projectId}
+        </if>
+        <if test="e.userId != null and e.userId != '' ">
+            AND t.USER_ID = #{e.userId}
+        </if>
+        <if test="e.versionId != null and e.versionId != '' ">
+            AND t.VERSION_ID = #{e.versionId}
+        </if>
+        <if test="e.type != null and e.type != '' ">
+            AND t.TYPE = #{e.type}
+        </if>
+        <if test="e.priority != null and e.priority != '' ">
+            AND t.PRIORITY = #{e.priority}
+        </if>
+        <if test="e.level != null and e.level != '' ">
+            AND t.LEVEL = #{e.level}
+        </if>
+        <if test="e.keyWork != null and e.keyWork != '' ">
+            AND t.KEY_WORK = #{e.keyWork}
+        </if>
+        <if test="e.endDate != null and e.endDate != '' ">
+            AND t.END_DATE = #{e.endDate}
+        </if>
+        <if test="e.content != null and e.content != '' ">
+            AND t.CONTENT = #{e.content}
+        </if>
+        <if test="e.fileIds != null and e.fileIds != '' ">
+            AND t.FILE_IDS = #{e.fileIds}
+        </if>
+        <if test="e.createBy != null and e.createBy != '' ">
+            AND t.CREATE_BY = #{e.createBy}
+        </if>
+        <if test="e.createDate != null and e.createDate != '' ">
+            AND t.CREATE_DATE = #{e.createDate}
+        </if>
+    </sql>
+
+</mapper>

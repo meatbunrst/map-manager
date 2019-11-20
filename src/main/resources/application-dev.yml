@@ -1,0 +1,66 @@
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        druid:
+            first:  #数据源1
+                url: jdbc:mysql://127.0.0.1:3306/exam?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+                username: root
+                password: root
+            second:  #数据源2
+                url: jdbc:mysql://127.0.0.1:3306/exam?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+                username: root
+                password: root
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            #validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: false
+                wall:
+                    config:
+                        multi-statement-allow: true
+
+#端口后的啥啥啥
+server:
+    servlet:
+        context-path: /map
+    port: 7777
+# ftp 的设置
+ftp:
+    window-tmp: D:/tmp
+    linux-tmp: /tmp
+    host: 127.0.0.1
+    port: 21
+    user: tianqian
+    password: 123456
+    ftp-basepath: /
+
+map:
+    # 开发者应该设置成自己的wx相关信息
+    wx:
+        app-id: wx68c612b75b49f8d2
+        app-secret: 242befb2e3fff23e402ab5f66afdc2c9
+        mch-id: 111111
+        mch-key: xxxxxx
+        notify-url: http://www.example.com/wx/order/pay-notify
+        # 商户证书文件路径
+        # 请参考“商户证书”一节 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=4_3
+        key-path: xxxxx
+

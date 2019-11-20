@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.debug.dao.DebugModuleDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.debug.entity.DebugModuleEntity">
+        <result column="ID" property="id" />
+        <result column="NUM" property="num" />
+        <result column="PID" property="pid" />
+        <result column="PIDS" property="pids" />
+        <result column="SIMPLENAME" property="simplename" />
+        <result column="FULLNAME" property="fullname" />
+        <result column="TIPS" property="tips" />
+        <result column="VERSION" property="version" />
+    </resultMap>
+
+
+    <delete id="deleteByModel">
+        delete t from DEBUG_MODULE t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from DEBUG_MODULE t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from DEBUG_MODULE t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from DEBUG_MODULE t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from DEBUG_MODULE t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.id != null and e.id != '' ">
+            AND t.ID = #{e.id}
+        </if>
+        <if test="e.num != null and e.num != '' ">
+            AND t.NUM = #{e.num}
+        </if>
+        <if test="e.pid != null and e.pid != '' ">
+            AND t.PID = #{e.pid}
+        </if>
+        <if test="e.pids != null and e.pids != '' ">
+            AND t.PIDS = #{e.pids}
+        </if>
+        <if test="e.simplename != null and e.simplename != '' ">
+            AND t.SIMPLENAME = #{e.simplename}
+        </if>
+        <if test="e.fullname != null and e.fullname != '' ">
+            AND t.FULLNAME = #{e.fullname}
+        </if>
+        <if test="e.tips != null and e.tips != '' ">
+            AND t.TIPS = #{e.tips}
+        </if>
+        <if test="e.version != null and e.version != '' ">
+            AND t.VERSION = #{e.version}
+        </if>
+    </sql>
+
+</mapper>

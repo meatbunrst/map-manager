@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.SysRoleDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SysRoleEntity">
+        <result column="role_id" property="roleId" />
+        <result column="role_name" property="roleName" />
+        <result column="remark" property="remark" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+
+    <delete id="deleteByModel">
+        delete t from SYS_ROLE t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from SYS_ROLE t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from SYS_ROLE t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from SYS_ROLE t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from SYS_ROLE t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.roleId != null and e.roleId != '' ">
+            AND t.ROLE_ID = #{e.roleId}
+        </if>
+        <if test="e.roleName != null and e.roleName != '' ">
+            AND t.ROLE_NAME = #{e.roleName}
+        </if>
+        <if test="e.remark != null and e.remark != '' ">
+            AND t.REMARK = #{e.remark}
+        </if>
+        <if test="e.createUserId != null and e.createUserId != '' ">
+            AND t.CREATE_USER_ID = #{e.createUserId}
+        </if>
+        <if test="e.createTime != null and e.createTime != '' ">
+            AND t.CREATE_TIME = #{e.createTime}
+        </if>
+    </sql>
+
+</mapper>

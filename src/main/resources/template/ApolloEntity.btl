@@ -1,0 +1,92 @@
+package ${g.codePackage}.entity;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.baomidou.mybatisplus.annotation.*;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.core.toolkit.Sequence;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.StringUtils;
+import com.cn.common.entity.AbstractModel;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+/**
+* ${g.name} entity 对象实体类
+* @author ${g.author}
+* @date ${g.date}
+*/
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@TableName("${g.tableName}")
+public class ${g.entityName}Entity extends AbstractModel<${g.entityName}Entity> {
+    <%  var keyType= '';var keyName = '';var getPID = ''; %>
+    private static final long serialVersionUID = 1L;
+    <%for(field in t.fields){%>
+    /**
+    * ${field.chinaName}
+    */
+    <%if (field.isKey == 2) {
+    keyType= field.type;
+    keyName = field.name;
+    getPID = strutil.toUpperCase(strutil.subStringTo(field.name,0,1))+strutil.subString(field.name,1);
+    %>
+    @Excel(name = "${field.chinaName}")
+    <% if (keyType == 'String'){ %>
+    @TableId(value ="${field.fieldName}",type = IdType.ID_WORKER_STR)
+    <% }else{ %>
+    @TableId(value ="${field.fieldName}",type = IdType.ID_WORKER)
+    <%}%>
+    <%}else{%>
+    <%if (field.type == 'Date') {%>
+    @Excel(name = "${field.chinaName}",exportFormat = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    <%}else{%>
+    @Excel(name = "${field.chinaName}")
+    <%}%>
+    @TableField(value="${field.fieldName}")
+    <%}%>
+    private ${field.type} ${field.name};
+    <%}%>
+    @Override
+    public Serializable pkVal() {
+        return this.${keyName};
+    }
+
+    @Override
+    public void preInsert() {
+        Sequence sequence = new Sequence(0, 0);
+        <% if (keyType == 'String'){ %>
+        this.${keyName} = String.valueOf(sequence.nextId());
+        <% }else{ %>
+        this.${keyName} = sequence.nextId();
+        <%}%>
+    }
+    @Override
+    public void preUpdate() {
+
+    }
+    @JSONField(serialize = false)
+    @Override
+    public boolean getIsNewRecord() {
+    <% if (keyType == 'String'){ %>
+        return isNewRecord || StringUtils.isBlank(get${getPID}());
+    <% }else{ %>
+        return isNewRecord || get${getPID}() == null;
+    <%}%>
+    }
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
+}
+
+

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.SysDictDetailedDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SysDictDetailedEntity">
+        <result column="id" property="id" />
+        <result column="param_key" property="paramKey" />
+        <result column="param_value" property="paramValue" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="label" property="label" />
+        <result column="label_id" property="labelId" />
+    </resultMap>
+
+    <delete id="deleteByModel">
+        delete t from SYS_DICT_DETAILED t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from SYS_DICT_DETAILED t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from SYS_DICT_DETAILED t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from SYS_DICT_DETAILED t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from SYS_DICT_DETAILED t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.id != null and e.id != '' ">
+            AND t.ID = #{e.id}
+        </if>
+        <if test="e.paramKey != null and e.paramKey != '' ">
+            AND t.PARAM_KEY = #{e.paramKey}
+        </if>
+        <if test="e.paramValue != null and e.paramValue != '' ">
+            AND t.PARAM_VALUE = #{e.paramValue}
+        </if>
+        <if test="e.status != null and e.status != '' ">
+            AND t.STATUS = #{e.status}
+        </if>
+        <if test="e.remark != null and e.remark != '' ">
+            AND t.REMARK = #{e.remark}
+        </if>
+        <if test="e.label != null and e.label != '' ">
+            AND t.LABEL = #{e.label}
+        </if>
+        <if test="e.labelId != null and e.labelId != '' ">
+            AND t.LABEL_ID = #{e.labelId}
+        </if>
+    </sql>
+
+</mapper>

@@ -1,0 +1,144 @@
+<template>
+  <el-dialog
+    :title="title"
+    :close-on-click-modal="false"
+    :visible.sync="visible"
+    :append-to-body="true"
+    center>
+    <el-form :rules="dataRule" :model="dataForm" ref="dataForm" :disabled="formDisabled" label-width="80px" @keyup.enter.native="dataFormSubmit()">
+      <%  var keyType= '';var keyName = ''; %>
+      <%for(field in t.fields){%>
+      <%if (field.isKey == 2) {
+      keyType= field.type;
+      keyName = field.name;}
+      %>
+      <%}%>
+      <%for(rows in t.rowList){%>
+      <el-row>
+        <%for(item in rows){%>
+        <el-col :span="12">
+          <el-form-item label="${item.chinaName}" prop="${item.name}">
+            <%if (item.type == 'Date') {%>
+            <el-date-picker
+              v-model="dataForm.${item.name}"
+              clearable
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="${item.chinaName}"/>
+            <%}else{%>
+            <el-input v-model="dataForm.${item.name}" placeholder="${item.chinaName}" clearable/>
+            <%}%>
+          </el-form-item>
+        </el-col>
+        <%}%>
+      </el-row>
+      <%}%>
+    </el-form>
+    <span v-if="!formDisabled" slot="footer" class="dialog-footer">
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+    </span>
+  </el-dialog>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      visible: false,
+      flag: '',
+      title: '',
+      formDisabled: false,
+      dataForm: {
+  <%for(field in t.fields){%>
+      <%if (field.type == 'Long') {%>
+        ${field.name}: 0<%if (!fieldLP.last) {%>,<%}%>
+      <%}else{%>
+        ${field.name}: ''<%if (!fieldLP.last) {%>,<%}%>
+      <%}%>
+  <%}%>
+      },
+      dataRule: {
+<%for(field in t.fields){%>
+<%if (field.isKey != 2) {%>
+        ${field.name}: [{ required: true, message: '${field.comment}不能为空', trigger: 'blur' }]<%if (!fieldLP.last){%>,
+<%}%><%}%><%}%>
+      }
+    }
+  },
+  methods: {
+    init(id) {
+      id = id || ''
+      this.flag = id || ''
+      this.formDisabled = false
+      this.title = (id ? '修改' : '新增')
+      this.visible = true
+      this.$nextTick(() => {
+        this.resetForm()
+        if (id) {
+          this.$http.get(this.$http.adornUrl(`/${strutil.toLowerCase(g.entityName)}/info`), { params: this.$http.adornParams({ ${keyName}: id }) }).then(({ data }) => {
+            if (data && data.code === 0) {
+             this.dataForm = data.${strutil.toLowerCase(g.entityName)}
+            }
+          })
+        }
+      })
+    },
+    show(id) {
+      id = id || ''
+      this.formDisabled = true
+      this.flag = id || ''
+      this.title = '详情'
+      this.visible = true
+      this.$nextTick(() => {
+        this.resetForm()
+        if (id) {
+          this.$http.get(this.$http.adornUrl(`/${strutil.toLowerCase(g.entityName)}/info`), { params: this.$http.adornParams({ ${keyName}: id }) }).then(({ data }) => {
+            if (data && data.code === 0) {
+              this.dataForm = data.${strutil.toLowerCase(g.entityName)}
+            }
+          })
+        }
+      })
+    },
+    resetForm() {
+      this.$refs['dataForm'].resetFields()
+      this.dataForm = Object.assign({
+      <%for(field in t.fields){%>
+      <%if (field.type == 'Long') {%>
+        ${field.name}: 0<%if (!fieldLP.last) {%>,<%}%>
+          <%}else{%>
+        ${field.name}: ''<%if (!fieldLP.last) {%>,<%}%>
+          <%}%>
+      <%}%>
+        })
+    },
+    // 表单提交
+    dataFormSubmit() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          this.$http({
+            url: this.$http.adornUrl(`/${strutil.toLowerCase(g.entityName)}/\${!this.flag ? 'add' : 'update'}`),
+            method: 'post',
+            data: this.$http.adornData(this.dataForm)
+          }).then(({ data }) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.visible = false
+                  this.$emit('refreshDataList')
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+        }
+      })
+    }
+  }
+}
+</script>

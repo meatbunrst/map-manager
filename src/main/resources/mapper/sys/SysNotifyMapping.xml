@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.SysNotifyDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SysNotifyEntity">
+        <result column="ID" property="id" />
+        <result column="TYPE" property="type" />
+        <result column="TITLE" property="title" />
+        <result column="CONTENT" property="content" />
+        <result column="FILES" property="files" />
+        <result column="STATUS" property="status" />
+        <result column="CREATE_BY" property="createBy" />
+        <result column="CREATE_DATE" property="createDate" />
+        <result column="ATTACH_IDS" property="attachIds" />
+        <result column="INFO_IDS" property="infoIds" />
+        <result column="USER_TYPE" property="userType" />
+    </resultMap>
+
+    <delete id="deleteByModel">
+        delete t from SYS_NOTIFY t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from SYS_NOTIFY t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from SYS_NOTIFY t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from SYS_NOTIFY t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from SYS_NOTIFY t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.id != null and e.id != '' ">
+            AND t.ID = #{e.id}
+        </if>
+        <if test="e.type != null and e.type != '' ">
+            AND t.TYPE = #{e.type}
+        </if>
+        <if test="e.title != null and e.title != '' ">
+            AND t.TITLE = #{e.title}
+        </if>
+        <if test="e.content != null and e.content != '' ">
+            AND t.CONTENT = #{e.content}
+        </if>
+        <if test="e.files != null and e.files != '' ">
+            AND t.FILES = #{e.files}
+        </if>
+        <if test="e.status != null and e.status != '' ">
+            AND t.STATUS = #{e.status}
+        </if>
+        <if test="e.createBy != null and e.createBy != '' ">
+            AND t.CREATE_BY = #{e.createBy}
+        </if>
+        <if test="e.createDate != null and e.createDate != '' ">
+            AND t.CREATE_DATE = #{e.createDate}
+        </if>
+
+        <if test="e.attachIds != null and e.attachIds != '' ">
+            AND t.ATTACH_IDS = #{e.attachIds}
+        </if>
+        <if test="e.infoIds != null and e.infoIds != '' ">
+            AND t.INFO_IDS = #{e.infoIds}
+        </if>
+        <if test="e.userType != null and e.userType != '' ">
+            AND t.USER_TYPE = #{e.userType}
+        </if>
+
+    </sql>
+
+</mapper>

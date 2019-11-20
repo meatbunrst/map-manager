@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.BatchAttachDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.BatchAttachEntity">
+        <result column="BATTCH_ID" property="battchId" />
+        <result column="MODULE_RECORD_ID" property="moduleRecordId" />
+        <result column="MODULE_TYPE" property="moduleType" />
+        <result column="BUSINESS_TYPE" property="businessType" />
+        <result column="FILE_TYPE" property="fileType" />
+        <result column="ATTACH_DESC" property="attachDesc" />
+        <result column="UPLOAD_FILE_NAME" property="uploadFileName" />
+        <result column="LOCAL_SAVE_PATH" property="localSavePath" />
+        <result column="FS_BASE_PATH" property="fsBasePath" />
+        <result column="FS_DATE_PATH" property="fsDatePath" />
+        <result column="FS_FILE_NAME" property="fsFileName" />
+        <result column="UPLOAD_USER_ACCOUNT" property="uploadUserAccount" />
+        <result column="UPLOAD_DATE" property="uploadDate" />
+    </resultMap>
+
+
+    <delete id="deleteByModel">
+        delete t from BATCH_ATTACH t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from BATCH_ATTACH t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from BATCH_ATTACH t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from BATCH_ATTACH t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from BATCH_ATTACH t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.battchId != null and e.battchId != '' ">
+            AND t.BATTCH_ID = #{e.battchId}
+        </if>
+        <if test="e.moduleRecordId != null and e.moduleRecordId != '' ">
+            AND t.MODULE_RECORD_ID = #{e.moduleRecordId}
+        </if>
+        <if test="e.moduleType != null and e.moduleType != '' ">
+            AND t.MODULE_TYPE = #{e.moduleType}
+        </if>
+        <if test="e.businessType != null and e.businessType != '' ">
+            AND t.BUSINESS_TYPE = #{e.businessType}
+        </if>
+        <if test="e.fileType != null and e.fileType != '' ">
+            AND t.FILE_TYPE = #{e.fileType}
+        </if>
+        <if test="e.attachDesc != null and e.attachDesc != '' ">
+            AND t.ATTACH_DESC = #{e.attachDesc}
+        </if>
+        <if test="e.uploadFileName != null and e.uploadFileName != '' ">
+            AND t.UPLOAD_FILE_NAME = #{e.uploadFileName}
+        </if>
+        <if test="e.localSavePath != null and e.localSavePath != '' ">
+            AND t.LOCAL_SAVE_PATH = #{e.localSavePath}
+        </if>
+        <if test="e.fsBasePath != null and e.fsBasePath != '' ">
+            AND t.FS_BASE_PATH = #{e.fsBasePath}
+        </if>
+        <if test="e.fsDatePath != null and e.fsDatePath != '' ">
+            AND t.FS_DATE_PATH = #{e.fsDatePath}
+        </if>
+        <if test="e.fsFileName != null and e.fsFileName != '' ">
+            AND t.FS_FILE_NAME = #{e.fsFileName}
+        </if>
+        <if test="e.uploadUserAccount != null and e.uploadUserAccount != '' ">
+            AND t.UPLOAD_USER_ACCOUNT = #{e.uploadUserAccount}
+        </if>
+        <if test="e.uploadDate != null and e.uploadDate != '' ">
+            AND t.UPLOAD_DATE = #{e.uploadDate}
+        </if>
+    </sql>
+
+</mapper>

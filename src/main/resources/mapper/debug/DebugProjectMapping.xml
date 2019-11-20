@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.debug.dao.DebugProjectDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.debug.entity.DebugProjectEntity">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="status" property="status" />
+        <result column="sum_bug" property="sumBug" />
+        <result column="marks" property="marks" />
+        <result column="file_ids" property="fileIds" />
+        <result column="create_date" property="createDate" />
+        <result column="end_date" property="endDate" />
+        <result column="own_person" property="ownPerson" />
+    </resultMap>
+
+
+    <delete id="deleteByModel">
+        delete t from DEBUG_PROJECT t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from DEBUG_PROJECT t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from DEBUG_PROJECT t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from DEBUG_PROJECT t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from DEBUG_PROJECT t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.id != null and e.id != '' ">
+            AND t.ID = #{e.id}
+        </if>
+        <if test="e.name != null and e.name != '' ">
+            AND t.NAME = #{e.name}
+        </if>
+        <if test="e.status != null and e.status != '' ">
+            AND t.STATUS = #{e.status}
+        </if>
+        <if test="e.sumBug != null and e.sumBug != '' ">
+            AND t.SUM_BUG = #{e.sumBug}
+        </if>
+        <if test="e.marks != null and e.marks != '' ">
+            AND t.MARKS = #{e.marks}
+        </if>
+        <if test="e.fileIds != null and e.fileIds != '' ">
+            AND t.FILE_IDS = #{e.fileIds}
+        </if>
+        <if test="e.createDate != null and e.createDate != '' ">
+            AND t.CREATE_DATE = #{e.createDate}
+        </if>
+        <if test="e.endDate != null and e.endDate != '' ">
+            AND t.END_DATE = #{e.endDate}
+        </if>
+        <if test="e.ownPerson != null and e.ownPerson != '' ">
+            AND t.OWN_PERSON = #{e.ownPerson}
+        </if>
+    </sql>
+
+</mapper>

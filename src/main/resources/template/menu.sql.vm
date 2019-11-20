@@ -1,0 +1,4 @@
+-- 菜单SQL
+INSERT INTO SYS_MENU (MENU_ID, PARENT_ID, NAME, URL, PERMS, TYPE, ICON, ORDER_NUM) VALUES  ('1', '${comments}', '${moduleName}/${pathName}', NULL, '1', 'config', '6');
+
+

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.SysLogDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SysLogEntity">
+        <result column="CREATE_DATE" property="createDate" />
+        <result column="ID" property="id" />
+        <result column="USERNAME" property="username" />
+        <result column="OPERATION" property="operation" />
+        <result column="METHOD" property="method" />
+        <result column="PARAMS" property="params" />
+        <result column="TIME" property="time" />
+        <result column="IP" property="ip" />
+    </resultMap>
+
+    <delete id="deleteByModel">
+        delete  t from SYS_LOG t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from SYS_LOG t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from SYS_LOG t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from SYS_LOG t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from SYS_LOG t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.createDate != null and e.createDate != '' ">
+            AND t.CREATE_DATE = #{e.createDate}
+        </if>
+        <if test="e.id != null and e.id != '' ">
+            AND t.ID = #{e.id}
+        </if>
+        <if test="e.username != null and e.username != '' ">
+            AND t.USERNAME = #{e.username}
+        </if>
+        <if test="e.operation != null and e.operation != '' ">
+            AND t.OPERATION = #{e.operation}
+        </if>
+        <if test="e.method != null and e.method != '' ">
+            AND t.METHOD = #{e.method}
+        </if>
+        <if test="e.params != null and e.params != '' ">
+            AND t.PARAMS = #{e.params}
+        </if>
+        <if test="e.time != null and e.time != '' ">
+            AND t.TIME = #{e.time}
+        </if>
+        <if test="e.ip != null and e.ip != '' ">
+            AND t.IP = #{e.ip}
+        </if>
+    </sql>
+
+</mapper>

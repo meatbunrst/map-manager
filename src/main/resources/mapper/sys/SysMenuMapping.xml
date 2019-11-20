@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.SysMenuDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SysMenuEntity">
+        <result column="TYPE" property="type" />
+        <result column="ICON" property="icon" />
+        <result column="ORDER_NUM" property="orderNum" />
+        <result column="STATUS" property="status" />
+        <result column="MENU_ID" property="menuId" />
+        <result column="PARENT_ID" property="parentId" />
+        <result column="NAME" property="name" />
+        <result column="URL" property="url" />
+        <result column="PERMS" property="perms" />
+    </resultMap>
+
+    <select id="queryListParentId" resultType="com.cn.modules.sys.entity.SysMenuEntity">
+        select * from sys_menu where parent_id = #{parentId}  and status='1' order by order_num Desc
+    </select>
+
+    <select id="queryNotButtonList" resultType="com.cn.modules.sys.entity.SysMenuEntity">
+        select distinct m.* from sys_user_role ur
+                        LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
+                        LEFT JOIN sys_menu m on rm.menu_id = m.menu_id
+        <where>
+        <if test="userId != null and userId != '' ">
+            AND ur.user_id = #{userId}
+        </if>
+        and m.type != 2 and m.status='1'
+        </where>
+         order by m.order_num Desc
+
+    </select>
+    <delete id="deleteByModel">
+        delete from SYS_MENU t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from SYS_MENU t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from SYS_MENU t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from SYS_MENU t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select * from SYS_MENU t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.type != null and e.type != '' ">
+            AND t.TYPE = #{e.type}
+        </if>
+        <if test="e.icon != null and e.icon != '' ">
+            AND t.ICON = #{e.icon}
+        </if>
+        <if test="e.orderNum != null and e.orderNum != '' ">
+            AND t.ORDER_NUM = #{e.orderNum}
+        </if>
+        <if test="e.status != null and e.status != '' ">
+            AND t.STATUS = #{e.status}
+        </if>
+        <if test="e.menuId != null and e.menuId != '' ">
+            AND t.MENU_ID = #{e.menuId}
+        </if>
+        <if test="e.parentId != null and e.parentId != '' ">
+            AND t.PARENT_ID = #{e.parentId}
+        </if>
+        <if test="e.name != null and e.name != '' ">
+            AND t.NAME = #{e.name}
+        </if>
+        <if test="e.url != null and e.url != '' ">
+            AND t.URL = #{e.url}
+        </if>
+        <if test="e.perms != null and e.perms != '' ">
+            AND t.PERMS = #{e.perms}
+        </if>
+    </sql>
+
+</mapper>

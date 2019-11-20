@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.modules.sys.dao.SysUserRoleDao">
+
+	<resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SysUserRoleEntity">
+		<result column="ID" property="id" />
+		<result column="USER_ID" property="userId" />
+		<result column="ROLE_ID" property="roleId" />
+	</resultMap>
+
+
+	<delete id="deleteBatch">
+		delete from sys_user_role where role_id in
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+	</delete>
+
+	<select id="queryRoleIdList" resultType="long">
+		select role_id from sys_user_role where user_id = #{value}
+	</select>
+
+
+	<delete id="deleteByModel">
+		delete t from SYS_USER_ROLE t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</delete>
+
+	<select id="selectCountByModel" resultType="int">
+		select count(1) from SYS_USER_ROLE t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListModel" resultMap="BaseResultMap">
+		select * from SYS_USER_ROLE t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectPage" resultMap="BaseResultMap">
+		select * from SYS_USER_ROLE t
+		<where>
+			<include refid="select_content"/>
+			${ew.sqlSegment}
+		</where>
+	</select>
+
+	<select id="queryPage" resultMap="BaseResultMap">
+		select * from SYS_USER_ROLE t
+		<where>
+			${ew.sqlSegment}
+		</where>
+	</select>
+
+	<sql id="select_content">
+		<if test="e.id != null and e.id != '' ">
+			AND t.ID = #{e.id}
+		</if>
+		<if test="e.userId != null and e.userId != '' ">
+			AND t.USER_ID = #{e.userId}
+		</if>
+		<if test="e.roleId != null and e.roleId != '' ">
+			AND t.ROLE_ID = #{e.roleId}
+		</if>
+	</sql>
+</mapper>

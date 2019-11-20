@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.sys.dao.SystemUserDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.sys.entity.SystemUserEntity">
+        <result column="USER_ID" property="userId" />
+        <result column="USERNAME" property="username" />
+        <result column="PASSWORD" property="password" />
+        <result column="SALT" property="salt" />
+        <result column="EMAIL" property="email" />
+        <result column="MOBILE" property="mobile" />
+        <result column="STATUS" property="status" />
+        <result column="CREATE_USER_ID" property="createUserId" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="DEPT_ID" property="deptId" />
+        <result column="ACCOUNT_NAME" property="accountName" />
+        <result column="wechat_id" property="wechatId" />
+        <result column="last_login_time" property="lastLoginTime" />
+        <result column="gender" property="gender" />
+        <result column="avatarUrl" property="avatarurl" />
+        <result column="city" property="city" />
+        <result column="DEPTNAME" property="deptName" />
+    </resultMap>
+
+
+    <!-- 查询用户的所有菜单ID -->
+    <select id="queryAllMenuId" resultType="long">
+        select distinct rm.menu_id from sys_user_role ur
+                                            LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
+        where ur.user_id = #{userId}
+    </select>
+
+    <!-- 查询用户的所有权限 -->
+    <select id="queryAllPerms" resultType="string">
+        select m.perms from sys_user_role ur
+                                LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
+                                LEFT JOIN sys_menu m on rm.menu_id = m.menu_id
+        where ur.user_id = #{userId}
+    </select>
+
+
+    <delete id="deleteByModel">
+        delete t from SYS_USER t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </delete>
+
+    <select id="selectCountByModel" resultType="int">
+        select count(1) from SYS_USER t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from SYS_USER t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select * from SYS_USER t
+        <where>
+            <include refid="select_content"/>
+             ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select t.* , d.FULLNAME  as DEPTNAME from SYS_USER t  LEFT JOIN SYS_DEPT d on t.DEPT_ID = d.ID
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <sql id="select_content">
+        <if test="e.userId != null and e.userId != '' ">
+            AND t.USER_ID = #{e.userId}
+        </if>
+        <if test="e.username != null and e.username != '' ">
+            AND t.USERNAME = #{e.username}
+        </if>
+        <if test="e.password != null and e.password != '' ">
+            AND t.PASSWORD = #{e.password}
+        </if>
+        <if test="e.salt != null and e.salt != '' ">
+            AND t.SALT = #{e.salt}
+        </if>
+        <if test="e.email != null and e.email != '' ">
+            AND t.EMAIL = #{e.email}
+        </if>
+        <if test="e.mobile != null and e.mobile != '' ">
+            AND t.MOBILE = #{e.mobile}
+        </if>
+        <if test="e.status != null and e.status != '' ">
+            AND t.STATUS = #{e.status}
+        </if>
+        <if test="e.createUserId != null and e.createUserId != '' ">
+            AND t.CREATE_USER_ID = #{e.createUserId}
+        </if>
+        <if test="e.createTime != null and e.createTime != '' ">
+            AND t.CREATE_TIME = #{e.createTime}
+        </if>
+        <if test="e.deptId != null and e.deptId != '' ">
+            AND t.DEPT_ID = #{e.deptId}
+        </if>
+        <if test="e.accountName != null and e.accountName != '' ">
+            AND t.ACCOUNT_NAME = #{e.accountName}
+        </if>
+        <if test="e.wechatId != null and e.wechatId != '' ">
+            AND t.WECHAT_ID = #{e.wechatId}
+        </if>
+        <if test="e.city != null and e.city != '' ">
+            AND t.CITY = #{e.city}
+        </if>
+    </sql>
+
+</mapper>

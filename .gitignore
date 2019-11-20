@@ -1,0 +1,21 @@
+/target
+/.settings
+.classpath
+.project
+*.iml
+# Package Files #
+.settings/
+target/
+deploy.bat
+rebel.xml
+sql/
+*.log
+/pom_bak.xml
+/genSql/
+/build/
+/bin/
+/map-logs
+.idea/
+sql/
+doc/
+/db-sql
