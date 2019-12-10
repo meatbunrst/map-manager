@@ -13,6 +13,7 @@ import com.cn.common.utils.ToolUtil;
 import com.cn.modules.sys.dao.SysMenuDao;
 import com.cn.modules.sys.dao.SystemUserDao;
 import com.cn.modules.sys.entity.SysMenuEntity;
+import com.cn.modules.sys.entity.SysUserRoleEntity;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,8 @@ public class SystemUserService extends AbstractService<SystemUserDao,SystemUserE
 
     @Autowired
     private SysMenuDao sysMenuDao;
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
 
 
@@ -71,6 +74,14 @@ public class SystemUserService extends AbstractService<SystemUserDao,SystemUserE
     @CacheEvict(value="Menu",allEntries = true)
     @Transactional(rollbackFor={RuntimeException.class})
     public boolean removeByIds( List<Long> idList) {
+        for (Long aLong : idList) {
+            if (aLong != null){
+                SysUserRoleEntity entity = new SysUserRoleEntity();
+                entity.setUserId(aLong);
+
+                sysUserRoleService.deleteByModel(entity);
+            }
+        }
         return SqlHelper.delBool(this.baseMapper.deleteBatchIds(idList));
     }
 

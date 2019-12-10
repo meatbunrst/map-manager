@@ -365,6 +365,22 @@ public class SysMenuController extends AbstractController {
 		return treeVos;
 	}
 
+	@GetMapping("/roleall")
+	public Object roleall(){
+		QueryWrapper<SysMenuEntity> sysMenuEntityQueryWrapper = new QueryWrapper<>();
+		sysMenuEntityQueryWrapper.orderByDesc("order_num");
+		List<SysMenuEntity> menuList = sysMenuService.list(sysMenuEntityQueryWrapper);
+		List<TreeVo> jsTreeChildren = new ArrayList<>();
+		for (SysMenuEntity entity : menuList) {
+			if (entity.getParentId() != null && entity.getParentId() == 0){
+				TreeVo node = new TreeVo(String.valueOf(entity.getMenuId()),entity.getName(),"fa fa-file-text-o",false);
+				node.setChildren(this.getResChrild(menuList,entity));
+				jsTreeChildren.add(node);
+			}
+		}
+		return jsTreeChildren;
+	}
+
 	/**
 	 * 验证参数是否正确
 	 */

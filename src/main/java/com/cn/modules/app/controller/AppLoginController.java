@@ -3,8 +3,10 @@ package com.cn.modules.app.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import com.alibaba.druid.sql.visitor.functions.Char;
 import com.cn.common.utils.R;
 import com.cn.common.validator.ValidatorUtils;
+import com.cn.config.WxMaConfiguration;
 import com.cn.modules.app.entity.UserInfo;
 import com.cn.modules.app.entity.WxLoginInfo;
 import com.cn.modules.app.form.LoginForm;
@@ -18,6 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,15 +45,14 @@ public class AppLoginController  extends AbstractController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Autowired
-    private WxMaService wxService;
+    @Value("${wx.miniapp.appid}")
+    private String appid;
 
     @Autowired
     private SystemUserService systemUserService;
 
     @Autowired
     private SysUserTokenService sysUserTokenService;
-
 
     /**
      * 微信账号登录
@@ -107,10 +109,11 @@ public class AppLoginController  extends AbstractController {
             return R.error("参数为空");
         }
 
+        final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         String sessionKey = null;
         String openId = null;
         try {
-            WxMaJscode2SessionResult result = this.wxService.getUserService().getSessionInfo(code);
+            WxMaJscode2SessionResult result = wxService.getUserService().getSessionInfo(code);
             sessionKey = result.getSessionKey();
             openId = result.getOpenid();
         } catch (Exception e) {

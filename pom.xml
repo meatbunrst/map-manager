@@ -51,6 +51,8 @@
 		<!--导入导出-->
 		<easypoi.version>3.1.0</easypoi.version>
 		<jwt.version>0.9.0</jwt.version>
+		<!--小程序-->
+		<weixin-java-miniapp.version>3.6.0</weixin-java-miniapp.version>
 	</properties>
 
 
@@ -270,7 +272,7 @@
 		<dependency>
 			<groupId>com.github.binarywang</groupId>
 			<artifactId>weixin-java-miniapp</artifactId>
-			<version>3.3.0</version>
+			<version>${weixin-java-miniapp.version}</version>
 		</dependency>
 
 		<!--缓存-->
@@ -285,13 +287,6 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
-		<!--<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>2.8</version>
-			</extension>
-		</extensions>-->
 		<plugins>
 			<!--打包用-->
 			<plugin>

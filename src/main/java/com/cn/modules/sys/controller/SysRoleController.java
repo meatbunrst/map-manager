@@ -134,6 +134,12 @@ public class SysRoleController extends AbstractController {
     @PostMapping(value = "/delete")
     public Object delete(@RequestBody Long[] ids) {
         sysRoleService.removeByIds(Arrays.asList(ids));
+
+        for (Long id : ids) {
+            QueryWrapper<SysUserRoleEntity> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("ROLE_ID",id);
+            sysUserRoleService.remove(queryWrapper);
+        }
         sysRoleMenuService.deleteBatch(ids);
         return R.ok();
     }
