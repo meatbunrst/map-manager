@@ -3,7 +3,7 @@ package com.cn.common.factory;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cn.common.constant.state.Order;
-import com.cn.common.utils.HttpKit;
+import com.cn.common.utils.HttpContextUtils;
 import com.cn.common.utils.ToolUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ public class PageFactory<T> {
 
     public Page<T> defaultPage() {
 
-        HttpServletRequest request = HttpKit.getRequest();
+        HttpServletRequest request = HttpContextUtils.getRequest();
 //        添加默认值，方便测试。
         long limit = (StrUtil.isBlank(request.getParameter("limit"))?20:Integer.valueOf(request.getParameter("limit")));
         //已经不用了

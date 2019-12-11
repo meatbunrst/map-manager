@@ -13,6 +13,14 @@ public class HttpContextUtils {
 	public static HttpServletRequest getHttpServletRequest() {
 		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 	}
+	/**
+	 * 获取 包装防Xss Sql注入的 HttpServletRequest
+	 * @return request
+	 */
+	public static HttpServletRequest getRequest() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		return new WafRequestWrapper(request);
+	}
 
 	public static String getDomain(){
 		HttpServletRequest request = getHttpServletRequest();

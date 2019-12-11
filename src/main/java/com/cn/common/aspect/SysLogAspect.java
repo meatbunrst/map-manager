@@ -1,8 +1,8 @@
 package com.cn.common.aspect;
 
+import cn.hutool.system.HostInfo;
 import com.cn.common.annotation.SysLog;
 import com.cn.common.utils.HttpContextUtils;
-import com.cn.common.utils.IPUtils;
 import com.cn.modules.sys.entity.SysLogEntity;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import com.cn.modules.sys.service.SysLogService;
@@ -80,7 +80,8 @@ public class SysLogAspect {
 		//获取request
 		HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
 		//设置IP地址
-		sysLog.setIp(IPUtils.getIpAddr(request));
+		HostInfo info = new HostInfo();
+		sysLog.setIp(info.getAddress());
 
 		//用户名
 		String username = ((SystemUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();

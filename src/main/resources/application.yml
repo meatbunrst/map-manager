@@ -119,9 +119,4 @@ map:
     expire: 6048000
     header: token
 
-#autoload:
-#  cache:
-#    config:
-#      namespace: autoload-cache-test
-#    enable: true
-#    proxy-target-class: true
+

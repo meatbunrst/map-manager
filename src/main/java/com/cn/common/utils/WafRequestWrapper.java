@@ -13,6 +13,8 @@
  */
 package com.cn.common.utils;
 
+import cn.hutool.http.HtmlUtil;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -137,7 +139,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
         }
         String tmpStr = rawValue;
         if (this.filterXSS) {
-            tmpStr = WafKit.stripXSS(rawValue);
+            tmpStr = HtmlUtil.filter(rawValue);
         }
         if (this.filterSQL) {
             tmpStr = WafKit.stripSqlInjection(tmpStr);

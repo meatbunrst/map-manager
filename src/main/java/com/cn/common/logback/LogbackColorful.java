@@ -7,6 +7,7 @@ import ch.qos.logback.core.pattern.color.ForegroundCompositeConverterBase;
 
 /**
  * @author dgzhangheng
+ * 控制台显示不同颜色
  */
 public class LogbackColorful extends ForegroundCompositeConverterBase<ILoggingEvent> {
 

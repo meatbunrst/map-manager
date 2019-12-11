@@ -11,6 +11,7 @@ import java.util.Date;
 /**
  * @author zhangheng
  * @date 2019-09-06  15:59:00
+ * 自动填充创建时间与更新时间
  */
 @Component
 @Slf4j

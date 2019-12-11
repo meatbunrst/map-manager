@@ -10,8 +10,6 @@ import org.apache.shiro.subject.Subject;
  * Shiro工具类
  * 
  * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年11月12日 上午9:49:19
  */
 public class ShiroUtils {
 
@@ -43,14 +41,6 @@ public class ShiroUtils {
 		return SecurityUtils.getSubject().getPrincipal() != null;
 	}
 
-	public static String getKaptcha(String key) {
-		Object kaptcha = getSessionAttribute(key);
-		if(kaptcha == null){
-			throw new RRException("验证码已失效");
-		}
-		getSession().removeAttribute(key);
-		return kaptcha.toString();
-	}
 
 	public static String getDecrypt(String decryptedPassword){
 

@@ -11,7 +11,6 @@ package com.cn.common.aspect;
 
 
 import com.cn.common.annotation.Permission;
-import com.cn.common.utils.SpringContextHolder;
 import com.cn.common.utils.TokenUtil;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import com.cn.modules.sys.service.SystemUserService;

@@ -12,7 +12,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     private static Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-
     /**
      * 两个目录拼接
      * @param dirA
