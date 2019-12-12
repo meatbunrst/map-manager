@@ -1,4 +1,4 @@
-package com.cn.modules.app.utils;
+package com.cn.common.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

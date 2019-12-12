@@ -1,12 +1,12 @@
 package com.cn.common.aspect;
 
-import cn.hutool.system.HostInfo;
+import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.json.JSONUtil;
 import com.cn.common.annotation.SysLog;
 import com.cn.common.utils.HttpContextUtils;
 import com.cn.modules.sys.entity.SysLogEntity;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import com.cn.modules.sys.service.SysLogService;
-import com.google.gson.Gson;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -71,7 +71,7 @@ public class SysLogAspect {
 		//请求的参数
 		Object[] args = joinPoint.getArgs();
 		try{
-			String params = new Gson().toJson(args);
+			String params = JSONUtil.toJsonStr(args);
 			sysLog.setParams(params);
 		}catch (Exception e){
 
@@ -80,8 +80,7 @@ public class SysLogAspect {
 		//获取request
 		HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
 		//设置IP地址
-		HostInfo info = new HostInfo();
-		sysLog.setIp(info.getAddress());
+		sysLog.setIp(ServletUtil.getClientIPByHeader(request));
 
 		//用户名
 		String username = ((SystemUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();

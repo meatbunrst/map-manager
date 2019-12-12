@@ -2,7 +2,6 @@ package com.cn.common.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.cn.common.exception.RRException;
-import com.cn.modules.app.utils.JwtUtils;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import com.cn.modules.sys.service.SystemUserService;
 import io.jsonwebtoken.Claims;

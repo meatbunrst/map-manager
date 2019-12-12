@@ -3,7 +3,7 @@ package com.cn.modules.sys.oauth2;
 import cn.hutool.core.util.StrUtil;
 import com.cn.common.exception.RRException;
 import com.cn.common.utils.RedisUtils;
-import com.cn.modules.app.utils.JwtUtils;
+import com.cn.common.utils.JwtUtils;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import com.cn.modules.sys.service.SystemUserService;
 import io.jsonwebtoken.Claims;

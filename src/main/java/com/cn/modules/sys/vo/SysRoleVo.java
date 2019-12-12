@@ -1,4 +1,4 @@
-package com.cn.modules.sys.utils;
+package com.cn.modules.sys.vo;
 
 import com.cn.modules.sys.entity.SysRoleEntity;
 import lombok.AllArgsConstructor;

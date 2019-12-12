@@ -1,6 +1,6 @@
 package com.cn;
 
-import com.cn.modules.app.utils.JwtUtils;
+import com.cn.common.utils.JwtUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

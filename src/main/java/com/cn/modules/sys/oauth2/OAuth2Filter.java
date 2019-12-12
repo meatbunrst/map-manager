@@ -1,9 +1,9 @@
 package com.cn.modules.sys.oauth2;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.cn.common.utils.HttpContextUtils;
 import com.cn.common.utils.R;
-import com.google.gson.Gson;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.shiro.authc.AuthenticationException;
@@ -56,7 +56,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setHeader("Access-Control-Allow-Origin", HttpContextUtils.getOrigin());
 
-            String json = new Gson().toJson(R.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
+            String json = JSONUtil.toJsonStr(R.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
 
             httpResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
             httpResponse.getWriter().print(json);
@@ -77,7 +77,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
             Throwable throwable = e.getCause() == null ? e : e.getCause();
             R r = R.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
 
-            String json = new Gson().toJson(r);
+            String json = JSONUtil.toJsonStr(r);
             httpResponse.getWriter().print(json);
             httpResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
         } catch (IOException e1) {

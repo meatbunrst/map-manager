@@ -15,7 +15,7 @@ import com.cn.modules.sys.entity.SysUserRoleEntity;
 import com.cn.modules.sys.service.SysRoleMenuService;
 import com.cn.modules.sys.service.SysRoleService;
 import com.cn.modules.sys.service.SysUserRoleService;
-import com.cn.modules.sys.utils.SysRoleVo;
+import com.cn.modules.sys.vo.SysRoleVo;
 import com.cn.modules.sys.vo.TreeVo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
