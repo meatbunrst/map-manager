@@ -5,10 +5,10 @@ import cn.hutool.json.JSONUtil;
 import com.cn.common.utils.HttpContextUtils;
 import com.cn.common.utils.R;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpStatus;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletRequest;
@@ -56,9 +56,9 @@ public class OAuth2Filter extends AuthenticatingFilter {
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setHeader("Access-Control-Allow-Origin", HttpContextUtils.getOrigin());
 
-            String json = JSONUtil.toJsonStr(R.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
+            String json = JSONUtil.toJsonStr(R.error(HttpStatus.UNAUTHORIZED.value(), "invalid token"));
 
-            httpResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
+            httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
             httpResponse.getWriter().print(json);
             return false;
         }
@@ -75,11 +75,11 @@ public class OAuth2Filter extends AuthenticatingFilter {
         try {
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            R r = R.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
+            R r = R.error(HttpStatus.UNAUTHORIZED.value(), throwable.getMessage());
 
             String json = JSONUtil.toJsonStr(r);
             httpResponse.getWriter().print(json);
-            httpResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
+            httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         } catch (IOException e1) {
 
         }
