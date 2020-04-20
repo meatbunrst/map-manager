@@ -1,10 +1,7 @@
 package com.cn.modules.sys.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.ImportParams;
-import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,27 +10,19 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
-import com.cn.modules.sys.entity.BatchAttachEntity;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.SysLogEntity;
 import com.cn.modules.sys.service.SysLogService;
-import com.cn.modules.sys.utils.AttachUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-
-import static cn.hutool.core.date.DatePattern.PURE_DATETIME_PATTERN;
 
 /**
 * 日志控制器
@@ -64,7 +53,7 @@ public class SysLogController extends AbstractController {
 
         page.setRecords( sysLogService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -82,7 +71,7 @@ public class SysLogController extends AbstractController {
 
         entityQueryWrapper.eq("USERNAME",getUser().getUsername());
         page.setRecords( sysLogService.selectPage(page,entityQueryWrapper));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -94,7 +83,7 @@ public class SysLogController extends AbstractController {
     @RequiresPermissions("syslog:add")
     public Object add(@RequestBody SysLogEntity entity) {
         sysLogService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -106,7 +95,7 @@ public class SysLogController extends AbstractController {
     @RequiresPermissions("syslog:delete")
     public Object delete(@RequestBody Long[] ids) {
         sysLogService.removeByIds(Arrays.asList(ids));
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -117,7 +106,7 @@ public class SysLogController extends AbstractController {
     @PostMapping(value = "/update")
     public Object update(@RequestBody SysLogEntity entity) {
         sysLogService.updateById(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -127,7 +116,7 @@ public class SysLogController extends AbstractController {
     */
     @GetMapping(value = "/info")
     public Object info(SysLogEntity entity) {
-        return R.ok().put("syslog", sysLogService.selectOne(entity));
+        return Result.ok().put("syslog", sysLogService.selectOne(entity));
     }
 
 

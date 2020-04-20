@@ -2,7 +2,7 @@ package com.cn.modules.sys.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.common.utils.ShiroUtils;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import com.cn.modules.sys.form.SysLoginForm;
@@ -69,13 +69,13 @@ public class SysLoginController extends AbstractController {
 	public Map<String, Object> login(@RequestBody SysLoginForm form)throws IOException {
 		boolean captcha = sysCaptchaService.validate(form.getUuid(), form.getCaptcha());
 		if(!captcha){
-			return R.error("验证码不正确");
+			return Result.error("验证码不正确");
 		}
 		if (!StrUtil.hasEmpty(form.getApollo(),form.getApp())){
 			form.setApollo(ShiroUtils.getDecrypt(form.getApollo(),form.getUuid()));
 			form.setApp(ShiroUtils.getDecrypt(form.getApp(),form.getUuid()));
 		}else {
-			return R.error("账号或密码不正确");
+			return Result.error("账号或密码不正确");
 		}
 		LambdaQueryWrapper<SystemUserEntity> wrapper = new LambdaQueryWrapper<>();
 		wrapper.eq(SystemUserEntity::getUsername,form.getApollo());
@@ -84,17 +84,17 @@ public class SysLoginController extends AbstractController {
 
 		//账号不存在、密码错误
 		if(user == null || !user.getPassword().equals(new Sha256Hash(form.getApp(), user.getSalt()).toHex())) {
-			return R.error("账号或密码不正确");
+			return Result.error("账号或密码不正确");
 		}
 
 		//账号锁定
 		if(user.getStatus() == 0){
-			return R.error("账号已被锁定,请联系管理员");
+			return Result.error("账号已被锁定,请联系管理员");
 		}
 
 		//生成token，并保存到数据库
-		R r = sysUserTokenService.createToken(user.getUserId()).put("user",user);
-		return r;
+		Result result = sysUserTokenService.createToken(user.getUserId()).put("user",user);
+		return result;
 	}
 
 	/**
@@ -110,9 +110,9 @@ public class SysLoginController extends AbstractController {
 	 * 退出
 	 */
 	@PostMapping("/sys/logout")
-	public R logout() {
+	public Result logout() {
 		sysUserTokenService.logout(getUser());
-		return R.ok();
+		return Result.ok();
 	}
 	
 }

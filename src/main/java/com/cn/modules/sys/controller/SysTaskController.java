@@ -13,7 +13,7 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.BatchAttachEntity;
 import com.cn.modules.sys.entity.SysTaskEntity;
 import com.cn.modules.sys.service.SysTaskService;
@@ -61,7 +61,7 @@ public class SysTaskController extends AbstractController {
         QueryWrapper<SysTaskEntity> entityQueryWrapper = (new CustomWrapper(SysTaskEntity.class)).parseSqlWhere(list);
         page.setRecords( sysTaskService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -73,7 +73,7 @@ public class SysTaskController extends AbstractController {
     public Object list(SysTaskEntity entity) {
     Page<SysTaskEntity> page = new PageFactory<SysTaskEntity>().defaultPage();
         page.setRecords( sysTaskService.selectPage(page,entity));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -85,7 +85,7 @@ public class SysTaskController extends AbstractController {
     @RequiresPermissions("systask:add")
     public Object add(@RequestBody SysTaskEntity entity) {
         sysTaskService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -97,7 +97,7 @@ public class SysTaskController extends AbstractController {
     @RequiresPermissions("systask:delete")
     public Object delete(@RequestBody String[] ids) {
         sysTaskService.removeByIds(Arrays.asList(ids));
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -108,7 +108,7 @@ public class SysTaskController extends AbstractController {
     @PostMapping(value = "/update")
     public Object update(@RequestBody SysTaskEntity entity) {
         sysTaskService.updateById(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -118,7 +118,7 @@ public class SysTaskController extends AbstractController {
     */
     @GetMapping(value = "/info")
     public Object info(SysTaskEntity entity) {
-        return R.ok().put("systask", sysTaskService.selectOne(entity));
+        return Result.ok().put("systask", sysTaskService.selectOne(entity));
     }
 
     /**
@@ -157,9 +157,9 @@ public class SysTaskController extends AbstractController {
             e.printStackTrace();
         }
         if (flag){
-            return R.ok();
+            return Result.ok();
         }else {
-            return R.error("导入错误").put("batch",model);
+            return Result.error("导入错误").put("batch",model);
         }
     }
     /**

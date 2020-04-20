@@ -2,7 +2,7 @@ package com.cn.modules.map.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.common.utils.ShiroUtils;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import com.cn.modules.sys.form.SysLoginForm;
@@ -11,7 +11,6 @@ import com.cn.modules.sys.service.SystemUserService;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +39,7 @@ public class MapLoginController {
             form.setApollo(ShiroUtils.getDecrypt(form.getApollo(),form.getUuid()));
             form.setApp(ShiroUtils.getDecrypt(form.getApp(),form.getUuid()));
         }else {
-            return R.error("账号或密码不正确");
+            return Result.error("账号或密码不正确");
         }
         LambdaQueryWrapper<SystemUserEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SystemUserEntity::getUsername,form.getApollo());
@@ -49,16 +48,16 @@ public class MapLoginController {
 
         //账号不存在、密码错误
         if(user == null || !user.getPassword().equals(new Sha256Hash(form.getApp(), user.getSalt()).toHex())) {
-            return R.error("账号或密码不正确");
+            return Result.error("账号或密码不正确");
         }
 
         //账号锁定
         if(user.getStatus() == 0){
-            return R.error("账号已被锁定,请联系管理员");
+            return Result.error("账号已被锁定,请联系管理员");
         }
 
         //生成token，并保存到数据库
-        R r = sysUserTokenService.createToken(user.getUserId()).put("user",user);
+        Result r = sysUserTokenService.createToken(user.getUserId()).put("user",user);
         return r;
     }
 

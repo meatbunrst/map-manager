@@ -22,8 +22,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cn.common.annotation.SysLog;
 import com.cn.common.constant.Constant;
 import com.cn.common.exception.RRException;
-import com.cn.common.utils.R;
 import com.cn.common.utils.RedisUtils;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.SysMenuEntity;
 import com.cn.modules.sys.service.SysMenuService;
 import com.cn.modules.sys.service.SystemUserService;
@@ -68,10 +68,10 @@ public class SysMenuController extends AbstractController {
 	 * 导航菜单
 	 */
 	@GetMapping("/nav")
-	public R nav(){
+	public Result nav(){
 		List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(getUserId());
 		Set<String> permissions = shiroService.getUserPermissions(getUserId());
-		return R.ok().put("menuList", menuList).put("permissions", permissions);
+		return Result.ok().put("menuList", menuList).put("permissions", permissions);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class SysMenuController extends AbstractController {
 			voList =  redisUtils.get(MENU+getUserId(),List.class);
 			permissions =  redisUtils.get(PERMISSION+getUserId(),Set.class);
 		}
-		return R.ok().put("menuList", voList).put("permissions", permissions);
+		return Result.ok().put("menuList", voList).put("permissions", permissions);
 	}
 	/**
 	 * 所有菜单列表
@@ -122,7 +122,7 @@ public class SysMenuController extends AbstractController {
 	 * 导航菜单
 	 */
 	@GetMapping("/mainNav")
-	public R mainNav(){
+	public Result mainNav(){
 		List<SysMenuEntity> menuList = Lists.newArrayList();
 		if(getUserId() == com.cn.common.utils.Constant.SUPER_ADMIN){
 			QueryWrapper<SysMenuEntity> sysMenuEntityQueryWrapper = new QueryWrapper<>();
@@ -133,13 +133,13 @@ public class SysMenuController extends AbstractController {
 			menuList = sysMenuService.getUserMainMenu(getUserId());
 		}
 
-		return R.ok().put("list",menuList);
+		return Result.ok().put("list",menuList);
 	}
 	/**
 	 * 选择菜单(添加、修改菜单)
 	 */
 	@GetMapping("/select")
-	public R select(){
+	public Result select(){
 		//查询列表数据
 		List<SysMenuEntity> menuList = sysMenuService.queryNotButtonList(getUserId());
 		
@@ -151,16 +151,16 @@ public class SysMenuController extends AbstractController {
 		root.setOpen(true);
 		menuList.add(root);
 		
-		return R.ok().put("menuList", menuList);
+		return Result.ok().put("menuList", menuList);
 	}
 	
 	/**
 	 * 菜单信息
 	 */
 	@GetMapping("/info/{menuId}")
-	public R info(@PathVariable("menuId") Long menuId){
+	public Result info(@PathVariable("menuId") Long menuId){
 		SysMenuEntity menu = (SysMenuEntity) sysMenuService.getById(menuId);
-		return R.ok().put("menu", menu);
+		return Result.ok().put("menu", menu);
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@SysLog("保存菜单")
 	@PostMapping("/save")
-	public R save(@RequestBody SysMenuEntity menu){
+	public Result save(@RequestBody SysMenuEntity menu){
 		//数据校验
 		redisUtils.deleteKeys(PERMISSION);
 		redisUtils.deleteKeys(MENU);
@@ -177,7 +177,7 @@ public class SysMenuController extends AbstractController {
 			menu.setParentId(0L);
 		}
 		sysMenuService.save(menu);
-		return R.ok();
+		return Result.ok();
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@SysLog("删除菜单")
 	@PostMapping("/deleteAll/{menuId}")
-	public R deleteAll(@PathVariable("menuId") long menuId){
+	public Result deleteAll(@PathVariable("menuId") long menuId){
 
 		//数据校验
 		redisUtils.deleteKeys(PERMISSION);
@@ -201,7 +201,7 @@ public class SysMenuController extends AbstractController {
 			sysMenuService.removeByIds(longs);
 		}
 		sysMenuService.delete(menuId);
-		return R.ok();
+		return Result.ok();
 	}
 	
 	/**
@@ -209,20 +209,20 @@ public class SysMenuController extends AbstractController {
 	 */
 	@SysLog("修改菜单")
 	@PostMapping("/update")
-	public R update(@RequestBody SysMenuEntity menu){
+	public Result update(@RequestBody SysMenuEntity menu){
 		//数据校验
 //		verifyForm(menu);
 		//数据校验
 		redisUtils.deleteKeys(PERMISSION);
 		redisUtils.deleteKeys(MENU);
 		sysMenuService.updateById(menu);
-		return R.ok().put("menu", menu);
+		return Result.ok().put("menu", menu);
 	}
 
 	@SysLog("新建菜单")
 	@PostMapping("/add")
     @RequiresPermissions("test:add")
-	public R add(@RequestBody SysMenuEntity menu){
+	public Result add(@RequestBody SysMenuEntity menu){
 		//数据校验
 		redisUtils.deleteKeys(PERMISSION);
 		redisUtils.deleteKeys(MENU);
@@ -235,7 +235,7 @@ public class SysMenuController extends AbstractController {
 			menu.setParentId(0L);
 		}
 		sysMenuService.save(menu);
-		return R.ok().put("menu", menu);
+		return Result.ok().put("menu", menu);
 	}
 
 	@GetMapping("/all")
@@ -327,7 +327,7 @@ public class SysMenuController extends AbstractController {
             }
         }
 
-        return R.ok();
+        return Result.ok();
     }
 
 	/**
@@ -335,18 +335,18 @@ public class SysMenuController extends AbstractController {
 	 */
 	@SysLog("删除菜单")
 	@PostMapping("/delete/{menuId}")
-	public R delete(@PathVariable("menuId") long menuId){
+	public Result delete(@PathVariable("menuId") long menuId){
 		redisUtils.deleteKeys(PERMISSION);
 		redisUtils.deleteKeys(MENU);
 
 		//判断是否有子菜单或按钮
 		List<SysMenuEntity> menuList = sysMenuService.queryListParentId(menuId);
 		if(menuList.size() > 0){
-			return R.error("请先删除子菜单或按钮");
+			return Result.error("请先删除子菜单或按钮");
 		}
 
 		sysMenuService.delete(menuId);
-		return R.ok();
+		return Result.ok();
 	}
 
 

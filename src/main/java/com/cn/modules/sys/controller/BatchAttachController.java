@@ -13,7 +13,7 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.BatchAttachEntity;
 import com.cn.modules.sys.service.BatchAttachService;
 import com.cn.modules.sys.utils.AttachUtils;
@@ -65,7 +65,7 @@ public class BatchAttachController extends AbstractController {
         QueryWrapper<BatchAttachEntity> entityQueryWrapper = (new CustomWrapper(BatchAttachEntity.class)).parseSqlWhere(list);
         page.setRecords( batchAttachService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
 
@@ -78,7 +78,7 @@ public class BatchAttachController extends AbstractController {
     @RequiresPermissions("batchattach:add")
     public Object add(@RequestBody BatchAttachEntity entity) {
         batchAttachService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -90,7 +90,7 @@ public class BatchAttachController extends AbstractController {
     @RequiresPermissions("batchattach:delete")
     public Object delete(@RequestBody String[] ids) {
         batchAttachService.removeByIds(Arrays.asList(ids));
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -101,7 +101,7 @@ public class BatchAttachController extends AbstractController {
     @PostMapping(value = "/update")
     public Object update(@RequestBody BatchAttachEntity entity) {
         batchAttachService.updateById(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -111,12 +111,12 @@ public class BatchAttachController extends AbstractController {
      * @throws Exception
      */
     @PostMapping("/upload")
-    public R upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public Result upload(@RequestParam("file") MultipartFile file) throws Exception {
         if (file.isEmpty()) {
             throw new RRException("上传文件不能为空");
         }
         BatchAttachEntity entity = AttachUtils.saveTmpFile(file);
-        return R.ok().put("batch",entity);
+        return Result.ok().put("batch",entity);
     }
 
     /**
@@ -126,7 +126,7 @@ public class BatchAttachController extends AbstractController {
      * @throws Exception
      */
     @PostMapping("/multiupload")
-    public R Multi(@RequestParam("file") MultipartFile[] file) throws Exception {
+    public Result Multi(@RequestParam("file") MultipartFile[] file) throws Exception {
 
         List<BatchAttachEntity> entities = Lists.newArrayList();
         if (file.length > 0){
@@ -135,7 +135,7 @@ public class BatchAttachController extends AbstractController {
                 entities.add(entity);
             }
         }
-        return R.ok().put("batch",entities);
+        return Result.ok().put("batch",entities);
     }
 
     /**
@@ -211,7 +211,7 @@ public class BatchAttachController extends AbstractController {
     */
     @GetMapping(value = "/info")
     public Object info(BatchAttachEntity entity) {
-        return R.ok().put("batchattach", batchAttachService.selectOne(entity));
+        return Result.ok().put("batchattach", batchAttachService.selectOne(entity));
     }
 
     @RequestMapping(value="/viewImage")
@@ -279,9 +279,9 @@ public class BatchAttachController extends AbstractController {
             e.printStackTrace();
         }
         if (flag){
-            return R.ok();
+            return Result.ok();
         }else {
-            return R.error("导入错误").put("batch",model);
+            return Result.error("导入错误").put("batch",model);
         }
     }
 }

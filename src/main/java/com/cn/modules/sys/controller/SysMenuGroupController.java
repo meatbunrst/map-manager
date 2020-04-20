@@ -8,7 +8,6 @@ import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cn.modules.sys.controller.AbstractController;
 import org.springframework.web.bind.annotation.*;
 import com.cn.modules.sys.entity.SysMenuGroupEntity;
 import com.cn.modules.sys.service.SysMenuGroupService;
@@ -16,12 +15,11 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.cn.common.factory.PageFactory;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.BatchAttachEntity;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.json.JSONUtil;
-import java.util.Map;
 import com.cn.modules.sys.utils.AttachUtils;
 import java.io.InputStream;
 import java.util.Date;
@@ -31,7 +29,6 @@ import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.multipart.MultipartFile;
 /**
@@ -61,7 +58,7 @@ public class SysMenuGroupController extends AbstractController {
         QueryWrapper<SysMenuGroupEntity> entityQueryWrapper = (new CustomWrapper(SysMenuGroupEntity.class)).parseSqlWhere(list);
         page.setRecords( sysMenuGroupService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -73,7 +70,7 @@ public class SysMenuGroupController extends AbstractController {
     public Object list(SysMenuGroupEntity entity) {
     Page<SysMenuGroupEntity> page = new PageFactory<SysMenuGroupEntity>().defaultPage();
         page.setRecords( sysMenuGroupService.selectPage(page,entity));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -85,7 +82,7 @@ public class SysMenuGroupController extends AbstractController {
     @RequiresPermissions("sysmenugroup:add")
     public Object add(@RequestBody SysMenuGroupEntity entity) {
         sysMenuGroupService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -97,7 +94,7 @@ public class SysMenuGroupController extends AbstractController {
     @RequiresPermissions("sysmenugroup:delete")
     public Object delete(@RequestBody String[] ids) {
         sysMenuGroupService.removeByIds(Arrays.asList(ids));
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -108,7 +105,7 @@ public class SysMenuGroupController extends AbstractController {
     @PostMapping(value = "/update")
     public Object update(@RequestBody SysMenuGroupEntity entity) {
         sysMenuGroupService.updateById(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -118,7 +115,7 @@ public class SysMenuGroupController extends AbstractController {
     */
     @GetMapping(value = "/info")
     public Object info(SysMenuGroupEntity entity) {
-        return R.ok().put("sysmenugroup", sysMenuGroupService.selectOne(entity));
+        return Result.ok().put("sysmenugroup", sysMenuGroupService.selectOne(entity));
     }
 
     /**
@@ -157,9 +154,9 @@ public class SysMenuGroupController extends AbstractController {
             e.printStackTrace();
         }
         if (flag){
-            return R.ok();
+            return Result.ok();
         }else {
-            return R.error("导入错误").put("batch",model);
+            return Result.error("导入错误").put("batch",model);
         }
     }
     /**

@@ -13,7 +13,7 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.BatchAttachEntity;
 import com.cn.modules.sys.entity.SysDictDetailedEntity;
 import com.cn.modules.sys.entity.SysDictEntity;
@@ -65,7 +65,7 @@ public class SysDictController extends AbstractController {
         QueryWrapper<SysDictEntity> entityQueryWrapper = (new CustomWrapper(SysDictEntity.class)).parseSqlWhere(list);
         page.setRecords( sysDictService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -77,7 +77,7 @@ public class SysDictController extends AbstractController {
     public Object list(SysDictEntity entity) {
     Page<SysDictEntity> page = new PageFactory<SysDictEntity>().defaultPage();
         page.setRecords( sysDictService.selectPage(page,entity));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -89,7 +89,7 @@ public class SysDictController extends AbstractController {
     @RequiresPermissions("sysdict:add")
     public Object add(@RequestBody SysDictEntity entity) {
         sysDictService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -107,7 +107,7 @@ public class SysDictController extends AbstractController {
             entity.setLabelId(id);
             sysDictDetailedService.deleteByModel(entity);
         }
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -118,7 +118,7 @@ public class SysDictController extends AbstractController {
     @PostMapping(value = "/update")
     public Object update(@RequestBody SysDictEntity entity) {
         sysDictService.updateById(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -128,7 +128,7 @@ public class SysDictController extends AbstractController {
     */
     @GetMapping(value = "/info")
     public Object info(SysDictEntity entity) {
-        return R.ok().put("sysdict", sysDictService.selectOne(entity));
+        return Result.ok().put("sysdict", sysDictService.selectOne(entity));
     }
 
     /**
@@ -167,9 +167,9 @@ public class SysDictController extends AbstractController {
             e.printStackTrace();
         }
         if (flag){
-            return R.ok();
+            return Result.ok();
         }else {
-            return R.error("导入错误").put("batch",model);
+            return Result.error("导入错误").put("batch",model);
         }
     }
     /**

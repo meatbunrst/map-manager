@@ -1,0 +1,92 @@
+package com.cn.modules.map.service;
+
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.cn.common.service.AbstractService;
+import com.cn.common.utils.RedisUtils;
+import com.cn.common.utils.Result;
+import com.cn.modules.map.dao.MapZoneInfoDao;
+import com.cn.modules.map.entity.MapZoneInfoEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+* 区域信息描边表Service  业务接口
+*
+* @author tianqian
+* @date 2020-04-16 16:42:52
+*/
+@Service
+@Transactional(readOnly = true,rollbackFor={RuntimeException.class})
+@Slf4j
+public class MapZoneInfoService extends AbstractService<MapZoneInfoDao,MapZoneInfoEntity> {
+    @Autowired
+    private RedisUtils redisUtils;
+
+    /**
+    * <p>
+    * 根据 entity 条件，查询全部记录
+    * </p>
+    *
+    * @param model 实体对象封装操作类（可以为 null）
+    * @return List<MapZoneInfoEntity>
+    */
+    public List<MapZoneInfoEntity> selectList(MapZoneInfoEntity model){
+        return dao.selectListModel(model);
+    }
+
+    /**
+     * 得到东莞得区域信息geo.json
+     * @return
+     */
+    public Object getDgMap(Integer tree){
+        MapZoneInfoEntity model=new MapZoneInfoEntity();
+        //查询层级
+        model.setZoneTree(tree);
+
+        List<MapZoneInfoEntity> list=this.selectList(model);
+
+        List<Object> features=new ArrayList<>();
+        for(MapZoneInfoEntity obj:list){
+            Map<String,Object> feature=new HashMap();
+            feature.put("type","Feature");
+            Map<String,Object> properties=new HashMap<>();
+            properties.put("name",obj.getZoneName());
+            feature.put("properties", properties);
+            Map<String,Object> geometry=new HashMap<>();
+            geometry.put("type","MultiPolygon");
+            List<Object> coordinates=new ArrayList<>();
+            List<Object> coordinates_1=new ArrayList<>();
+            List<Object> coordinates_2=new ArrayList<>();
+            String pathObj=obj.getPath();
+            String[] paths=pathObj.split("\\|");
+            for (String path:paths){
+                String[] k=path.split(",");
+                double[]  kk=k.length>0?new double[]{Double.parseDouble(k[0]),Double.parseDouble(k[1])}:null;
+                coordinates_2.add(kk);
+            }
+            coordinates_1.add(coordinates_2);
+            coordinates.add(coordinates_1);
+            geometry.put("coordinates",coordinates);
+            feature.put("geometry", geometry);
+            features.add(feature);
+        }
+
+        Map<String,Object> result=new HashMap<>();
+        result.put("type","FeatureCollection");
+        result.put("features",features);
+        //永久缓存
+        redisUtils.set("tian_map_getDgMap"+tree, JSON.toJSON(result),RedisUtils.NOT_EXPIRE);
+        return result;
+    }
+
+}

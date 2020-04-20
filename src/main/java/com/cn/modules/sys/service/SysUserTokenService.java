@@ -2,9 +2,9 @@ package com.cn.modules.sys.service;
 
 
 import com.baomidou.mybatisplus.core.toolkit.Sequence;
-import com.cn.common.utils.R;
 import com.cn.common.utils.RedisUtils;
 import com.cn.common.utils.JwtUtils;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.SystemUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class SysUserTokenService {
     @Autowired
     private RedisUtils redisUtils;
 
-    public R createToken(long userId) {
+    public Result createToken(long userId) {
         Sequence sequence = new Sequence(0, 0);
         //生成一个token
 
@@ -36,7 +36,7 @@ public class SysUserTokenService {
         String token = jwtUtils.generateToken(tokenId);
 
         redisUtils.set(tokenId,token,jwtUtils.getExpire());
-        R r = R.ok().put("token", token).put("expire", jwtUtils.getExpire());
+        Result r = Result.ok().put("token", token).put("expire", jwtUtils.getExpire());
         return r;
     }
 

@@ -7,7 +7,7 @@ import com.cn.common.annotation.SysLog;
 import com.cn.common.constant.Constant;
 import com.cn.common.factory.PageFactory;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.common.utils.ToolUtil;
 import com.cn.modules.sys.entity.SysDeptEntity;
 import com.cn.modules.sys.service.SysDeptService;
@@ -45,7 +45,7 @@ public class SysDeptController extends AbstractController {
         Page<SysDeptEntity> page = new PageFactory<SysDeptEntity>().defaultPage();
         page.setRecords(sysDeptService.selectPage(page,entity,new QueryWrapper<>()));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
 
@@ -59,7 +59,7 @@ public class SysDeptController extends AbstractController {
     public Object all(SysDeptEntity entity) {
        List<SysDeptEntity> list = sysDeptService.selectList(entity);
 
-        return R.ok().put("list",list);
+        return Result.ok().put("list",list);
     }
 
     /**
@@ -78,7 +78,7 @@ public class SysDeptController extends AbstractController {
             deptSetPids(entity);
         }
         sysDeptService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     @GetMapping(value = "/depttree")
@@ -107,7 +107,7 @@ public class SysDeptController extends AbstractController {
     @RequiresPermissions("sysdept:delete")
     public Object delete(@RequestBody String id) {
         sysDeptService.deleteDept(id);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -122,7 +122,7 @@ public class SysDeptController extends AbstractController {
             entity.setFullname(entity.getSimplename());
         }
         sysDeptService.updateById(entity);
-        return R.ok().put("sysdept",entity);
+        return Result.ok().put("sysdept",entity);
     }
 
     /**
@@ -140,7 +140,7 @@ public class SysDeptController extends AbstractController {
                 deptEntity.setpName(pentity.getSimplename());
             }
         }
-        return R.ok().put("sysdept", deptEntity);
+        return Result.ok().put("sysdept", deptEntity);
     }
 
 
@@ -174,7 +174,7 @@ public class SysDeptController extends AbstractController {
      */
     @SysLog("删除所有子部门以及本部门")
     @PostMapping("/deleteAll/{deptId}")
-    public R deleteAll(@PathVariable("deptId") long deptId){
+    public Result deleteAll(@PathVariable("deptId") long deptId){
         //判断是否有子部门
         QueryWrapper<SysDeptEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("PID",deptId);
@@ -186,7 +186,7 @@ public class SysDeptController extends AbstractController {
             }
         }
         sysDeptService.removeById(deptId);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -233,7 +233,7 @@ public class SysDeptController extends AbstractController {
 
         }
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -247,7 +247,7 @@ public class SysDeptController extends AbstractController {
         sysDeptEntity.setPid(fatherId);
         List<SysDeptEntity> list = sysDeptService.selectList(sysDeptEntity);
         System.out.println(list);
-        return R.ok().put("list",list);
+        return Result.ok().put("list",list);
     }
 
 

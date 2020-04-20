@@ -15,7 +15,7 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.common.utils.ShiroUtils;
 import com.cn.common.validator.Assert;
 import com.cn.common.validator.ValidatorUtils;
@@ -77,7 +77,7 @@ public class SystemUserController extends AbstractController {
 
         QueryWrapper<SystemUserEntity> entityQueryWrapper = (new CustomWrapper(SystemUserEntity.class)).parseSqlWhere(list);
         page.setRecords( systemUserService.selectPage(page,entityQueryWrapper));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -85,14 +85,14 @@ public class SystemUserController extends AbstractController {
      */
     @SysLog("修改密码")
     @PostMapping("/password")
-    public R password(@RequestBody PasswordForm form){
+    public Result password(@RequestBody PasswordForm form){
         Assert.isBlank(form.getNewApp(), "新密码不为能空");
 
         if (!StrUtil.hasEmpty(form.getNewApp(),form.getApp())){
             form.setNewApp(ShiroUtils.getDecrypt(form.getNewApp(),form.getUuid()));
             form.setApp(ShiroUtils.getDecrypt(form.getApp(),form.getUuid()));
         }else {
-            return R.error("密码输入不正确");
+            return Result.error("密码输入不正确");
         }
 
 
@@ -103,10 +103,10 @@ public class SystemUserController extends AbstractController {
         //更新密码
         boolean flag = systemUserService.updatePassword(getUserId(), password, newPassword);
         if(!flag){
-            return R.error("原密码不正确");
+            return Result.error("原密码不正确");
         }
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -119,7 +119,7 @@ public class SystemUserController extends AbstractController {
         Page<SystemUserEntity> page = new PageFactory<SystemUserEntity>().defaultPage();
         page.setSize(100L);
         page.setRecords( systemUserService.selectPage(page,entity));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -130,7 +130,7 @@ public class SystemUserController extends AbstractController {
     @GetMapping(value = "/countName")
     public Object countName(SystemUserEntity entity) {
         boolean flag = systemUserService.selectCount(entity) > 0 ;
-        return R.ok().put("flag", flag);
+        return Result.ok().put("flag", flag);
     }
 
     /**
@@ -152,7 +152,7 @@ public class SystemUserController extends AbstractController {
         }
 
         systemUserService.updateBatchById(userEntities);
-        return R.ok();
+        return Result.ok();
     }
 
 
@@ -174,7 +174,7 @@ public class SystemUserController extends AbstractController {
         }
 
         systemUserService.updateBatchById(userEntities);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -209,7 +209,7 @@ public class SystemUserController extends AbstractController {
             sysUserRoleService.saveBatch(entities);
         }
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -220,7 +220,7 @@ public class SystemUserController extends AbstractController {
     @PostMapping(value = "/delete")
     public Object delete(@RequestBody Long[] ids) {
         systemUserService.removeByIds(Arrays.asList(ids));
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -245,7 +245,7 @@ public class SystemUserController extends AbstractController {
         }
 
         systemUserService.updateBatchById(userEntities);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -278,7 +278,7 @@ public class SystemUserController extends AbstractController {
             });
             sysUserRoleService.saveBatch(entities);
         }
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -291,7 +291,7 @@ public class SystemUserController extends AbstractController {
 
         entity = systemUserService.selectOne(entity);
         entity.setRoleIdList(sysUserRoleService.queryRoleIdList(entity.getUserId()));
-        return R.ok().put("systemuser", entity);
+        return Result.ok().put("systemuser", entity);
     }
     /**
     *  基本附件表导入
@@ -329,9 +329,9 @@ public class SystemUserController extends AbstractController {
             e.printStackTrace();
         }
         if (flag){
-            return R.ok();
+            return Result.ok();
         }else {
-            return R.error("导入错误").put("batch",model);
+            return Result.error("导入错误").put("batch",model);
         }
     }
     /**

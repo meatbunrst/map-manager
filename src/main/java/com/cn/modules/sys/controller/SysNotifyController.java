@@ -13,7 +13,7 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.BatchAttachEntity;
 import com.cn.modules.sys.entity.SysNotifyEntity;
 import com.cn.modules.sys.service.SysNotifyService;
@@ -60,7 +60,7 @@ public class SysNotifyController extends AbstractController {
         QueryWrapper<SysNotifyEntity> entityQueryWrapper = (new CustomWrapper(SysNotifyEntity.class)).parseSqlWhere(list);
         page.setRecords( sysNotifyService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -72,7 +72,7 @@ public class SysNotifyController extends AbstractController {
     public Object list(SysNotifyEntity entity) {
     Page<SysNotifyEntity> page = new PageFactory<SysNotifyEntity>().defaultPage();
         page.setRecords( sysNotifyService.selectPage(page,entity));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -84,7 +84,7 @@ public class SysNotifyController extends AbstractController {
     @RequiresPermissions("sysnotify:add")
     public Object add(@RequestBody SysNotifyEntity entity) {
         sysNotifyService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -96,7 +96,7 @@ public class SysNotifyController extends AbstractController {
     @RequiresPermissions("sysnotify:delete")
     public Object delete(@RequestBody String[] ids) {
         sysNotifyService.removeByIds(Arrays.asList(ids));
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -107,7 +107,7 @@ public class SysNotifyController extends AbstractController {
     @PostMapping(value = "/test")
     public Object test(@RequestParam(value="ids", required=false)String ids) {
         System.err.println(ids);
-        return R.ok();
+        return Result.ok();
     }
     /**
     * 更新
@@ -117,7 +117,7 @@ public class SysNotifyController extends AbstractController {
     @PostMapping(value = "/update")
     public Object update(@RequestBody SysNotifyEntity entity) {
         sysNotifyService.updateById(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -127,7 +127,7 @@ public class SysNotifyController extends AbstractController {
     */
     @GetMapping(value = "/info")
     public Object info(SysNotifyEntity entity) {
-        return R.ok().put("sysnotify", sysNotifyService.selectOne(entity));
+        return Result.ok().put("sysnotify", sysNotifyService.selectOne(entity));
     }
 
     /**
@@ -166,9 +166,9 @@ public class SysNotifyController extends AbstractController {
             e.printStackTrace();
         }
         if (flag){
-            return R.ok();
+            return Result.ok();
         }else {
-            return R.error("导入错误").put("batch",model);
+            return Result.error("导入错误").put("batch",model);
         }
     }
     /**

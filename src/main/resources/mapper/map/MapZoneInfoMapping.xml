@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.modules.map.dao.MapZoneInfoDao">
+
+    <resultMap id="BaseResultMap" type="com.cn.modules.map.entity.MapZoneInfoEntity">
+        <result column=" ID" property="id" />
+        <result column="ZONE_ID" property="zoneId" />
+        <result column="ZONE_NAME" property="zoneName" />
+        <result column="ZONE_TREE" property="zoneTree" />
+        <result column="PID" property="pid" />
+        <result column="PATH" property="path" />
+        <result column="LON" property="lon" />
+        <result column="LAT" property="lat" />
+        <result column="ZOOM" property="zoom" />
+    </resultMap>
+
+    <select id="selectListModel" resultMap="BaseResultMap">
+        select * from MAP_ZONE_INFO t
+        <where>
+            <include refid="select_content"/>
+        </where>
+    </select>
+
+
+    <sql id="select_content">
+        <if test="e.id != null and e.id != '' ">
+            AND t. ID = #{e.id}
+        </if>
+        <if test="e.zoneId != null and e.zoneId != '' ">
+            AND t.ZONE_ID = #{e.zoneId}
+        </if>
+        <if test="e.zoneName != null and e.zoneName != '' ">
+            AND t.ZONE_NAME = #{e.zoneName}
+        </if>
+        <if test="e.zoneTree != null and e.zoneTree != '' ">
+            AND t.ZONE_TREE = #{e.zoneTree}
+        </if>
+        <if test="e.pid != null and e.pid != '' ">
+            AND t.PID = #{e.pid}
+        </if>
+
+    </sql>
+
+</mapper>

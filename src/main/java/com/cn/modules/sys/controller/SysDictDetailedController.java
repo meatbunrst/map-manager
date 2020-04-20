@@ -1,10 +1,7 @@
 package com.cn.modules.sys.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.ImportParams;
-import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,31 +10,24 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
-import com.cn.modules.sys.entity.BatchAttachEntity;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.SysDictDetailedEntity;
 import com.cn.modules.sys.entity.SysDictEntity;
 import com.cn.modules.sys.service.SysDictDetailedService;
 import com.cn.modules.sys.service.SysDictService;
-import com.cn.modules.sys.utils.AttachUtils;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static cn.hutool.core.date.DatePattern.PURE_DATETIME_PATTERN;
 /**
 * 系统配置信息表控制器
 *
@@ -67,7 +57,7 @@ public class SysDictDetailedController extends AbstractController {
         QueryWrapper<SysDictDetailedEntity> entityQueryWrapper = (new CustomWrapper(SysDictDetailedEntity.class)).parseSqlWhere(list);
         page.setRecords( sysDictDetailedService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -79,7 +69,7 @@ public class SysDictDetailedController extends AbstractController {
     public Object list(SysDictDetailedEntity entity) {
     Page<SysDictDetailedEntity> page = new PageFactory<SysDictDetailedEntity>().defaultPage();
         page.setRecords( sysDictDetailedService.selectPage(page,entity));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -91,7 +81,7 @@ public class SysDictDetailedController extends AbstractController {
     @RequiresPermissions("sysdictdetailed:add")
     public Object add(@RequestBody SysDictDetailedEntity entity) {
         sysDictDetailedService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
     @GetMapping(value = "/dictDetail")
     public Object dictDetail(String name) {
@@ -104,7 +94,7 @@ public class SysDictDetailedController extends AbstractController {
         dictDetailedEntity.setLabelId(entity.getId());
         List<SysDictDetailedEntity> list = sysDictDetailedService.selectList(dictDetailedEntity);
 
-        return R.ok().put("list",list);
+        return Result.ok().put("list",list);
     }
 
     @GetMapping(value = "/dictDetail/map")
@@ -124,7 +114,7 @@ public class SysDictDetailedController extends AbstractController {
                 map.put(s,list);
             }
         });
-        return R.ok().put("map",map);
+        return Result.ok().put("map",map);
     }
 
     /**
@@ -136,7 +126,7 @@ public class SysDictDetailedController extends AbstractController {
     @RequiresPermissions("sysdictdetailed:delete")
     public Object delete(@RequestBody Integer[] ids) {
         sysDictDetailedService.removeByIds(Arrays.asList(ids));
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -150,7 +140,7 @@ public class SysDictDetailedController extends AbstractController {
         entity.setStatus(null);
 
         boolean flag = sysDictDetailedService.selectCount(entity) > 0;
-        return R.ok().put("flag",flag);
+        return Result.ok().put("flag",flag);
     }
 
     /**
@@ -161,7 +151,7 @@ public class SysDictDetailedController extends AbstractController {
     @PostMapping(value = "/update")
     public Object update(@RequestBody SysDictDetailedEntity entity) {
         sysDictDetailedService.updateById(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -171,7 +161,7 @@ public class SysDictDetailedController extends AbstractController {
     */
     @GetMapping(value = "/info")
     public Object info(SysDictDetailedEntity entity) {
-        return R.ok().put("sysdictdetailed", sysDictDetailedService.selectOne(entity));
+        return Result.ok().put("sysdictdetailed", sysDictDetailedService.selectOne(entity));
     }
 
 

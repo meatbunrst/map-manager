@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.modules.sys.entity.SysLogEntity;
 import com.cn.modules.sys.service.RedisService;
 import com.cn.modules.sys.vo.RedisVo;
@@ -61,7 +61,7 @@ public class RedisController extends AbstractController {
             return list.subList(fromIndex,toIndex);
         }
         page.setRecords(list);
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
 
@@ -72,7 +72,7 @@ public class RedisController extends AbstractController {
     */
     @PostMapping(value = "/add")
     public Object add(@RequestBody SysLogEntity entity) {
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -86,7 +86,7 @@ public class RedisController extends AbstractController {
         for (String id : ids) {
             redisService.delete(id);
         }
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -96,7 +96,7 @@ public class RedisController extends AbstractController {
     @PostMapping(value = "/flushdb")
     public Object flushdb() {
         redisService.flushdb();
-        return R.ok();
+        return Result.ok();
     }
 
 }

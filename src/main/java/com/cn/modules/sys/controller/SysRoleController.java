@@ -8,7 +8,7 @@ import com.cn.common.factory.PageFactory;
 import com.cn.common.param.wrapper.CustomItem;
 import com.cn.common.param.wrapper.CustomWrapper;
 import com.cn.common.utils.PageUtils;
-import com.cn.common.utils.R;
+import com.cn.common.utils.Result;
 import com.cn.common.validator.ValidatorUtils;
 import com.cn.modules.sys.entity.SysRoleEntity;
 import com.cn.modules.sys.entity.SysUserRoleEntity;
@@ -57,24 +57,24 @@ public class SysRoleController extends AbstractController {
         QueryWrapper<SysRoleEntity> entityQueryWrapper = (new CustomWrapper(SysRoleEntity.class)).parseSqlWhere(list);
         page.setRecords( sysRoleService.selectPage(page,entityQueryWrapper));
 
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
      * 角色列表
      */
     @GetMapping("/select")
-    public R select(){
+    public Result select(){
         Map<String, Object> map = new HashMap<>();
 
         List<SysRoleEntity> list = (List<SysRoleEntity>) sysRoleService.listByMap(map);
-        return R.ok().put("list", list);
+        return Result.ok().put("list", list);
     }
     /**
      * 角色列表
      */
     @GetMapping("/all")
-    public R all(){
+    public Result all(){
         Map<String, Object> map = new HashMap<>();
 
         //如果不是超级管理员，则只查询自己所拥有的角色列表
@@ -85,7 +85,7 @@ public class SysRoleController extends AbstractController {
             TreeVo treeVo = new TreeVo(String.valueOf(sysRoleEntity.getRoleId()),sysRoleEntity.getRoleName(),null,false);
             treeVos.add(treeVo);
         });
-        return R.ok().put("list", treeVos);
+        return Result.ok().put("list", treeVos);
     }
     /**
     * 获取分页信息
@@ -96,7 +96,7 @@ public class SysRoleController extends AbstractController {
     public Object list(SysRoleEntity entity) {
     Page<SysRoleEntity> page = new PageFactory<SysRoleEntity>().defaultPage();
         page.setRecords( sysRoleService.selectPage(page,entity));
-        return R.ok().put("page", new PageUtils(page));
+        return Result.ok().put("page", new PageUtils(page));
     }
 
     /**
@@ -108,7 +108,7 @@ public class SysRoleController extends AbstractController {
     @RequiresPermissions("sysrole:add")
     public Object add(@RequestBody SysRoleEntity entity) {
         sysRoleService.save(entity);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -123,7 +123,7 @@ public class SysRoleController extends AbstractController {
         List<SysRoleEntity> result = list.stream().filter(line -> longList.contains(line.getRoleId()))
                 .collect(Collectors.toList());
         list.removeAll(result);
-        return R.ok().put("undo", list).put("done", result);
+        return Result.ok().put("undo", list).put("done", result);
     }
 
     /**
@@ -141,7 +141,7 @@ public class SysRoleController extends AbstractController {
             sysUserRoleService.remove(queryWrapper);
         }
         sysRoleMenuService.deleteBatch(ids);
-        return R.ok();
+        return Result.ok();
     }
 
 
@@ -150,7 +150,7 @@ public class SysRoleController extends AbstractController {
      */
     @SysLog("保存角色")
     @PostMapping("/save")
-    public R save(@RequestBody SysRoleEntity role){
+    public Result save(@RequestBody SysRoleEntity role){
         ValidatorUtils.validateEntity(role);
 
         role.setCreateUserId(getUserId());
@@ -159,21 +159,21 @@ public class SysRoleController extends AbstractController {
 
         sysRoleMenuService.saveOrUpdate(role.getRoleId(),role.getMenuIdList());
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
      * 角色信息
      */
     @GetMapping("/info/{roleId}")
-    public R info(@PathVariable("roleId") Long roleId){
+    public Result info(@PathVariable("roleId") Long roleId){
         SysRoleEntity role = (SysRoleEntity) sysRoleService.getById(roleId);
 
         //查询角色对应的菜单
         List<Long> menuIdList = sysRoleMenuService.queryMenuIdList(roleId);
         role.setMenuIdList(menuIdList);
 
-        return R.ok().put("role", role);
+        return Result.ok().put("role", role);
     }
 
     /**
@@ -181,7 +181,7 @@ public class SysRoleController extends AbstractController {
      */
     @SysLog("分配角色")
     @PostMapping("/assignment")
-    public R assignment(@RequestBody SysRoleVo role){
+    public Result assignment(@RequestBody SysRoleVo role){
 
         List<SysUserRoleEntity> roleEntities = Lists.newArrayList();
         List<Long> roleIds = Lists.newArrayList();
@@ -201,7 +201,7 @@ public class SysRoleController extends AbstractController {
         }
 
         sysUserRoleService.saveBatch(roleEntities);
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -209,13 +209,13 @@ public class SysRoleController extends AbstractController {
      */
     @SysLog("修改角色")
     @PostMapping("/update")
-    public R update(@RequestBody SysRoleEntity role){
+    public Result update(@RequestBody SysRoleEntity role){
         ValidatorUtils.validateEntity(role);
 
         role.setCreateUserId(getUserId());
         sysRoleService.updateById(role);
         sysRoleMenuService.saveOrUpdate(role.getRoleId(),role.getMenuIdList());
-        return R.ok();
+        return Result.ok();
     }
 
 }
