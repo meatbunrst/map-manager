@@ -1,12 +1,8 @@
 package com.cn.modules.map.service;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.cn.common.service.AbstractService;
 import com.cn.common.utils.RedisUtils;
-import com.cn.common.utils.Result;
 import com.cn.modules.map.dao.MapZoneInfoDao;
 import com.cn.modules.map.entity.MapZoneInfoEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +48,50 @@ public class MapZoneInfoService extends AbstractService<MapZoneInfoDao,MapZoneIn
         MapZoneInfoEntity model=new MapZoneInfoEntity();
         //查询层级
         model.setZoneTree(tree);
-
         List<MapZoneInfoEntity> list=this.selectList(model);
+        Map<String,Object> result=this.getGeoJson(list);
+        Map<String,Object> json=new HashMap<>();
+        json.put("geoJson",result);
+        //json.put("centreLon","");
+       // json.put("centreLat","");
+      //  json.put("outline","");
+        //永久缓存
+        redisUtils.set("tian_map_getDgMap"+tree, JSON.toJSON(json),RedisUtils.NOT_EXPIRE);
+        return json;
+    }
 
+
+    /**
+     * 得到东莞的下钻数据
+     * @param name
+     * @return
+     */
+    public Object getDgDateDown(String name){
+        MapZoneInfoEntity model=new MapZoneInfoEntity();
+        model.setZoneName(name);
+        //得到此条数据对象
+        MapZoneInfoEntity entity=this.selectOne(model);
+
+        MapZoneInfoEntity params=new MapZoneInfoEntity();
+        params.setPid(entity.getZoneId());
+        List<MapZoneInfoEntity> list=this.selectList(params);
+        Map<String,Object> result=this.getGeoJson(list);
+
+        Map<String,Object> json=new HashMap<>();
+        json.put("geoJson",result);
+        json.put("centreLon",entity.getLon());
+        json.put("centreLat",entity.getLat());
+        json.put("outline",entity.getPath());
+        redisUtils.set("tian_map_getDgDateDown"+name, JSON.toJSON(json),RedisUtils.NOT_EXPIRE);
+        return json;
+    }
+
+    /**
+     * 得到地图的GeoJson
+     * @param list
+     * @return
+     */
+    public  Map<String,Object> getGeoJson( List<MapZoneInfoEntity> list){
         List<Object> features=new ArrayList<>();
         for(MapZoneInfoEntity obj:list){
             Map<String,Object> feature=new HashMap();
@@ -84,9 +121,6 @@ public class MapZoneInfoService extends AbstractService<MapZoneInfoDao,MapZoneIn
         Map<String,Object> result=new HashMap<>();
         result.put("type","FeatureCollection");
         result.put("features",features);
-        //永久缓存
-        redisUtils.set("tian_map_getDgMap"+tree, JSON.toJSON(result),RedisUtils.NOT_EXPIRE);
         return result;
     }
-
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.cn.modules.map.dao.MapZoneInfoDao">
 
     <resultMap id="BaseResultMap" type="com.cn.modules.map.entity.MapZoneInfoEntity">
-        <result column=" ID" property="id" />
+        <result column="ID" property="id" />
         <result column="ZONE_ID" property="zoneId" />
         <result column="ZONE_NAME" property="zoneName" />
         <result column="ZONE_TREE" property="zoneTree" />
