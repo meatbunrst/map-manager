@@ -123,4 +123,15 @@ public class MapZoneInfoService extends AbstractService<MapZoneInfoDao,MapZoneIn
         result.put("features",features);
         return result;
     }
+
+    public Object getDgList(Integer tree){
+        MapZoneInfoEntity model=new MapZoneInfoEntity();
+        //查询层级
+        model.setZoneTree(tree);
+        List<MapZoneInfoEntity> list=this.selectList(model);
+        //永久缓存
+        redisUtils.set("tian_map_getDgList"+tree, JSON.toJSON(list),RedisUtils.NOT_EXPIRE);
+        return list;
+    }
+
 }

@@ -71,4 +71,22 @@ public class MapService {
         return result;
     }
 
+    public Object getDgList(Integer tree){
+        Result result=new Result();
+        //从缓存中拿数据
+        String mapStr=null;
+        if (redisUtils.exists("tian_map_getDgList"+tree)){
+            mapStr=redisUtils.get("tian_map_getDgList"+tree);
+        }
+        if (mapStr==null){
+            //缓存数据无效 再次查询
+            result.put("data",mapZoneInfoService.getDgList(tree));
+            log.info("东莞地图list数据 查询取数");
+        }else{
+            result.put("data", JSON.parse(mapStr));
+            log.info("东莞地图list数据 缓存取数");
+        }
+        return result;
+    }
+
 }

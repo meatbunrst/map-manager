@@ -47,5 +47,16 @@ public class MapController {
         return Result.error(errMsg);
     }
 
+    @GetMapping("/getDgList")
+    public Object getDgList(Integer tree){
+        String errMsg="";
+        try{
+            return mapService.getDgList(tree);
+        }catch (Exception e ){
+            errMsg=e.toString();
+        }
+        return Result.error(errMsg);
+    }
+
 
 }
